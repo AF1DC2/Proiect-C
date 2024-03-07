@@ -1,2 +1,1 @@
-Proiect Programe in C pentru facultate.
-Aplicatie de contabilitate cu meniu non-interactiv actionat cu ajutorul argumentelor din linia de comanda.
+The app is not finished yet. Various bugs may be present.
