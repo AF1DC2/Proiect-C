@@ -60,8 +60,15 @@ void AdaugaC(){ /*Functia pentru adaugare de cheltuieli*/
     Venit citire;
     char nume_doc[20];
     char linie[80], *i;
-    printf("Introduceti numele documentului de unde se vor prelua datele: ");
-    scanf("%s", nume_doc);
+    do{
+        printf("Introduceti numele documentului de unde se vor prelua datele: ");
+        scanf("%s", nume_doc);
+        cin = fopen(nume_doc, "r");
+        if(cin == NULL){
+            system("cls");
+            printf("Documentul introdus nu exista!\n");
+        }
+    }while(cin == NULL);
     cin = fopen(nume_doc, "r");
     c = fopen("Cheltuieli.txt", "a");
     while(!feof(cin)){
@@ -224,6 +231,7 @@ int Log(){ /*Functia pentru acces la optiunile din meniu*/
             fgets(Vparola, 20, u);
             strcpy(Vnume + strlen(Vnume) -1, "\0");
             strcpy(Vparola + strlen(Vparola) - 1, "\0");
+            decrypt(Vparola);
             if((strcmp(Vnume, nume) == 0) && (strcmp(Vparola, parola) == 0)){
                 system("cls");
                 return 1;
