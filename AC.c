@@ -822,10 +822,24 @@ int main(int argc, char *argv[]){
                     AfisarePC(argc, argv);
                 }
                 if(strcmp(argv[1], "CDD") == 0){
-                    CreareDD(argc, argv);
+                    if(Nivel_acces == 2){
+                        CreareDD(argc, argv);
+                    }
+                    else{
+                        red();
+                        printf("Nu aveti acces la aceasta optiune. Contactati un admin!");
+                        reset();
+                    }
                 }
                 if(strcmp(argv[1], "CDC") == 0){
-                    CreareDC(argc, argv);
+                    if(Nivel_acces == 2){
+                        CreareDC(argc, argv);
+                    }
+                    else{
+                        red();
+                        printf("Nu aveti acces la aceasta optiune. Contactati un admin!");
+                        reset();
+                    }
                 }
             }
         }
