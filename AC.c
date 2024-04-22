@@ -195,7 +195,6 @@ void AdaugaV(){ /*Functia pentru adaugare de venituri*/
     while(!feof(vin)){
         fscanf(vin, "%d", &citire.suma);
         fgets(linie, 80, vin);
-        printf("%s.\n", linie);
         i = strtok(linie, ",");
         strcpy(citire.moneda, i);
         i = strtok(NULL, ",");
@@ -204,8 +203,9 @@ void AdaugaV(){ /*Functia pentru adaugare de venituri*/
         strcpy(citire.data, i);
         i = strtok(NULL, ",");
         strcpy(citire.categorie, i);
-        fprintf(v, "%d%s,%s,%s,%s\n", citire.suma, citire.moneda, citire.sursa, citire.data, citire.categorie);
+        fprintf(v, "%d%s,%s,%s,%s", citire.suma, citire.moneda, citire.sursa, citire.data, citire.categorie);
     }
+    fprintf(v, "\n");
     system("cls");
     green();
     printf("Datele au fost introduse cu succes!\n");
@@ -243,8 +243,9 @@ void AdaugaC(){ /*Functia pentru adaugare de cheltuieli*/
         strcpy(citire.data, i);
         i = strtok(NULL, ",");
         strcpy(citire.categorie, i);
-        fprintf(c, "%d%s,%s,%s,%s\n", citire.suma, citire.moneda, citire.sursa, citire.data, citire.categorie);
+        fprintf(c, "%d%s,%s,%s,%s", citire.suma, citire.moneda, citire.sursa, citire.data, citire.categorie);
     }
+    fprintf(c, "\n");
     system("cls");
     green();
     printf("Datele au fost introduse cu succes!\n");
@@ -534,7 +535,6 @@ void CreareDD(int argc, char *argv[]){ /*Functia de creare a unui document nou c
                 getchar();
                 fgets(nume_doc, 30, stdin);
                 strcpy(nume_doc+strlen(nume_doc)-1, ".txt\0");
-                out = fopen(nume_doc, "w");
                 if(strcmp(argv[2], "C") == 0){
                     int k = 0;
                     FILE *c;
@@ -543,6 +543,7 @@ void CreareDD(int argc, char *argv[]){ /*Functia de creare a unui document nou c
                         fgets(linie, 100, c);
                         if(!feof(c)){
                             if(strstr(linie, argv[3]) != NULL){
+                                out = fopen(nume_doc, "a");
                                 k++;
                                 fprintf(out, "%s", linie);
                             }
@@ -569,6 +570,7 @@ void CreareDD(int argc, char *argv[]){ /*Functia de creare a unui document nou c
                         fgets(linie, 100, v);
                         if(!feof(v)){
                             if(strstr(linie, argv[3]) != NULL){
+                                out = fopen(nume_doc, "a");
                                 k++;
                                 fprintf(out, "%s", linie);
                             }
@@ -596,6 +598,7 @@ void CreareDD(int argc, char *argv[]){ /*Functia de creare a unui document nou c
                         fgets(linie, 100, v);
                         if(!feof(v)){
                             if(strstr(linie, argv[3]) != NULL){
+                                out = fopen(nume_doc, "a");
                                 k++;
                                 fprintf(out, "+%s", linie);
                             }
@@ -605,6 +608,7 @@ void CreareDD(int argc, char *argv[]){ /*Functia de creare a unui document nou c
                         fgets(linie, 100, c);
                         if(!feof(c)){
                             if(strstr(linie, argv[3]) != NULL){
+                                out = fopen(nume_doc, "a");
                                 k++;
                                 fprintf(out, "-%s", linie);
                             }
@@ -645,6 +649,7 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
             reset();
         }
         else{
+            int k = 0;
             FILE *out;
             char nume_doc[34];
             char linie[100];
@@ -653,27 +658,25 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
             getchar();
             fgets(nume_doc, 30, stdin);
             strcpy(nume_doc+strlen(nume_doc)-1, ".txt\0");
-            out = fopen(nume_doc, "w");
             printf("Introduceti categoria pe care o cautati: ");
             fgets(categorie, 30, stdin);
             strcpy(categorie+strlen(categorie)-1, "\0");
             if(strcmp(argv[2], "C") == 0){
-                int k = 0;
                 FILE *c;
                 c = fopen("Cheltuieli.txt", "r");
                 while(!feof(c)){
                     fgets(linie, 100, c);
                     if(!feof(c)){
                         if(strstr(linie, categorie) != NULL){
+                            out = fopen(nume_doc, "a");
                             k++;
                             fprintf(out, "%s", linie);
                         }
                     }
                 }
                 if(k == 0){
-                    printf("Nu exista cheltuieli inregistrate sub categoria %s\n", categorie);
                     red();
-                    printf("Documentul este gol!");
+                    printf("Nu exista venituri inregistrate sub categoria %s\n", categorie);
                     reset();
                 }
                 else{
@@ -684,22 +687,21 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
                 fclose(c);
             }
             if(strcmp(argv[2], "V") == 0){
-                int k = 0;
                 FILE *v;
                 v = fopen("Venituri.txt", "r");
                 while(!feof(v)){
                     fgets(linie, 100, v);
                     if(!feof(v)){
-                        if(strstr(linie, argv[3]) != NULL){
+                        if(strstr(linie, categorie) != NULL){
+                            out = fopen(nume_doc, "a");
                             k++;
                             fprintf(out, "%s", linie);
                         }
                     }
                 }
                 if(k == 0){
-                    printf("Nu exista venituri inregistrate sub categoria %s\n", categorie);
                     red();
-                    printf("Documentul este gol!");
+                    printf("Nu exista venituri inregistrate sub categoria %s\n", categorie);
                     reset();
                 }
                 else{
@@ -710,7 +712,6 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
                 fclose(v);
             }
             if(strcmp(argv[2], "A") == 0){
-                int k = 0;
                 FILE *c, *v;
                 c = fopen("Cheltuieli.txt", "r");
                 v = fopen("Venituri.txt", "r");
@@ -718,6 +719,7 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
                     fgets(linie, 100, v);
                     if(!feof(v)){
                         if(strstr(linie, categorie) != NULL){
+                            out = fopen(nume_doc, "a");
                             k++;
                             fprintf(out, "+%s", linie);
                         }
@@ -727,15 +729,15 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
                     fgets(linie, 100, c);
                     if(!feof(c)){
                         if(strstr(linie, categorie) != NULL){
+                            out = fopen(nume_doc, "a");
                             k++;
                             fprintf(out, "-%s", linie);
                         }
                     }
                 }
                 if(k == 0){
-                    printf("Nu exista venituri sau cheltuieli inregistrate sub categoria %s\n", categorie);
                     red();
-                    printf("Documentul este gol!");
+                    printf("Nu exista venituri inregistrate sub categoria %s\n", categorie);
                     reset();
                 }
                 else{
@@ -746,7 +748,9 @@ void CreareDC(int argc, char *argv[]){ /*Functia de creare a ununi document nou 
                 fclose(c);
                 fclose(v);
             }
-            fclose(out);
+            if(k != 0){
+                fclose(out);
+            }
         }
     }
 }
